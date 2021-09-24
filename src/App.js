@@ -1,25 +1,51 @@
-import logo from './logo.svg';
-import './App.css';
+import React, {Component} from 'react';
+import Products from "./components/Products/Products/Products";
+import Register from "./components/Register/Register";
 
-function App() {
-  return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
-  );
+
+
+class App extends Component {
+    constructor(props) {
+        super(props);
+        this.state = this.getInitialState();
+    }
+
+    getInitialState() {
+        return {products: [], isRegistered: false};
+    }
+
+    componentDidMount() {
+        const fetchedProducts = [];
+        for (let i = 0; i < 10; i++) {
+            fetch("https://api.punkapi.com/v2/beers/random")
+                .then(res => res.json())
+                .then(product => {
+                fetchedProducts.push({
+                    id: product[0].id,
+                    image_url: product[0].image_url,
+                    name: product[0].name,
+                    description: product[0].description
+                });
+            });
+        }
+        this.setState({products: fetchedProducts, isRegistered: false});
+    }
+
+    registerChangeHandler = () => {
+        this.setState(prevState => {
+            return {...prevState, isRegistered: !prevState.isRegistered}
+        });
+    }
+
+    render() {
+        const isRegistered = this.state.isRegistered;
+
+        return (
+            <div className="App">
+                { isRegistered ? <Products products={this.state.products}/> : <Register isRegistered={isRegistered} onIsRegisteredChange={this.registerChangeHandler}/> }
+            </div>
+        );
+    }
 }
 
 export default App;
