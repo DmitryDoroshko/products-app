@@ -1,8 +1,9 @@
 .register {
+    display: flex;
+    justify-content: center;
+    align-items: center;
 }
 
 .registerBtn {
     display: block;
-    width: 100%;
-    max-width: 200px;
 }

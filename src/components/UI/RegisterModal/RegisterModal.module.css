@@ -37,6 +37,10 @@
     justify-content: flex-end;
 }
 
+.actions button {
+    width: 100%;
+}
+
 .controls {
     display: flex;
     width: 100%;
@@ -46,11 +50,12 @@
 .closeButton {
     display: block;
     position: absolute;
-    right: 2rem;
-    top: 2rem;
+    right: 1rem;
+    top: 0.5rem;
+    border-radius: 1rem;
     z-index: 1000;
     cursor: pointer;
-    padding: 0.5rem;
+    padding: 1rem 2rem;
 }
 
 .error input{

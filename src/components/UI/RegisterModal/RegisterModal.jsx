@@ -71,18 +71,17 @@ class ModalOverlay extends Component {
     passwordChangeHandler = (event) => {
         this.setState(prevState => {
             let isPasswordValid = true;
-            if (event.target.value.trim().length < 3) {
+            if (event.target.value.trim().length < 6) {
                 isPasswordValid = false;
             }
             return {...prevState, password: event.target.value, isPasswordValid: isPasswordValid};
         })
     }
 
-
     render() {
         return (
             <Card className={styles.modal}>
-                <button className={styles.closeButton}>X</button>
+                <button className={styles.closeButton} onClick={this.props.onClose}>X</button>
                 <header className={styles.header}>
                     <h2>{this.props.title}</h2>
                 </header>
@@ -101,6 +100,8 @@ class ModalOverlay extends Component {
                     console.log("email is valid", this.state.isEmailValid);
                     console.log("password is valid", this.state.isPasswordValid);
 
+                    console.log("state", this.state);
+
                     if (this.state.isNameValid
                         && this.state.isDateOfBirthValid
                         && this.state.isEmailValid && this.state.isPasswordValid) {
@@ -108,11 +109,11 @@ class ModalOverlay extends Component {
                         this.setInitialState();
                         this.props.onFormSubmit(event);
                     } else {
-                        console.log("Something went wrong");
+                        alert("Something went wrong");
                     }
 
                 }}>
-                    <div className={styles.controls}>
+                    <div className={`${styles.controls} ${!this.state.isNameValid ? " error" : ""}`}>
                         <label htmlFor="name">Name</label>
                         <input type="text"
                                id="name"
@@ -122,7 +123,7 @@ class ModalOverlay extends Component {
                                }
                                />
                     </div>
-                    <div className={styles.controls}>
+                    <div className={`${styles.controls} ${!this.state.isDateOfBirthValid ? " " : ""}`}>
                         <label htmlFor="date-of-birth">Date of Birth</label>
                         <input type="date"
                                id="date-of-birth"
@@ -133,7 +134,7 @@ class ModalOverlay extends Component {
                                onChange={e => this.dateOfBirthChangeHandler(e)}
                         />
                     </div>
-                    <div className={styles.controls}>
+                    <div className={`${styles.controls} ${!this.state.isEmailValid ? " error" : ""}`}>
                         <label htmlFor="email">Email</label>
                         <input type="email"
                                id="email" value={this.state.email}
@@ -141,7 +142,7 @@ class ModalOverlay extends Component {
                                onChange={e => this.emailChangeHandler(e)}
                                />
                     </div>
-                    <div className={styles.controls}>
+                    <div className={`${styles.controls} ${!this.state.isPasswordValid ? " error" : ""}`}>
                         <label htmlFor="password">Password</label>
                         <input type="password"
                                id="password"

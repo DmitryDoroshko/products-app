@@ -34,7 +34,7 @@ class Register extends React.Component {
             <div className={styles.register}>
                 {!this.state.registerClicked ? (<Button className={styles.registerBtn} onClick={this.registerClickedHandler}>Register</Button>)
                     : <RegisterModal
-                        title="Register Form"
+                        title="Registration Form"
                         buttonMessage="Click me!"
                         onFormSubmit={this.formSubmitHandler}
                         onClose={this.closeHandler}/>}
