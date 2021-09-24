@@ -13,88 +13,68 @@ class Backdrop extends Component {
 class ModalOverlay extends Component {
     state = {
         name: "",
-        dateOfBirth: null,
+        dateOfBirth: "",
         email: "",
         password: "",
-        nameInputRef: React.createRef(),
-        dateInputRef: React.createRef(),
-        emailInputRef: React.createRef(),
-        passwordInputRef: React.createRef(),
+        isNameValid: false,
+        isDateOfBirthValid: false,
+        isEmailValid: false,
+        isPasswordValid: false,
     };
 
     setInitialState = () => {
         this.setState({
             name: "",
-            dateOfBirth: null,
+            dateOfBirth: "",
             email: "",
             password: "",
-            nameInputRef: React.createRef(),
-            dateInputRef: React.createRef(),
-            emailInputRef: React.createRef(),
-            passwordInputRef: React.createRef(),
+            isNameValid: false,
+            isDateOfBirthValid: false,
+            isEmailValid: false,
+            isPasswordValid: false,
         });
-    }
-
-    formDataValidCheck = (formData) => {
-        if (formData.name.trim().length < 3) {
-            this.state.nameInputRef.current.classList.add('error');
-            return false;
-        } else {
-            this.state.nameInputRef.current.classList.remove('error');
-        }
-
-        if (+formData.dateOfBirth?.getFullYear() < 1900) {
-            this.state.dateInputRef.current.classList.add("error");
-            return false;
-        } else {
-            this.state.dateInputRef.current.classList.remove("error");
-        }
-
-        if (+formData.dateOfBirth?.getFullYear() > 2100) {
-            this.state.dateInputRef.current.classList.add("error");
-            return false;
-        } else {
-            this.state.dateInputRef.current.classList.remove("error");
-        }
-
-        if (!formData.email.includes("@")) {
-            this.state.emailInputRef.current.classList.add("error");
-            return false;
-        } else {
-            this.state.emailInputRef.current.classList.remove("error");
-        }
-
-        if (formData.password.trim().length < 3) {
-            this.state.passwordInputRef.current.classList.add("error");
-            return false;
-        } else {
-            this.state.passwordInputRef.current.classList.remove("error");
-        }
-
-        return true;
     }
 
     nameChangeHandler = (event) => {
         this.setState(prevState => {
-            return {...prevState, name: event.target.value};
+            let isNameValid = true;
+
+            if (event.target.value.trim().length < 3) {
+                isNameValid = false;
+            }
+
+            return {...prevState, name: event.target.value, isNameValid: isNameValid};
         })
     }
 
     dateOfBirthChangeHandler = (event) => {
         this.setState(prevState => {
-            return {...prevState, dateOfBirth: event.target.value};
+            let isDateOfBirthValid = true;
+            let date = new Date(event.target.value);
+            if (date.getFullYear() < 1900 || date.getFullYear() > 2100) {
+                isDateOfBirthValid = false;
+            }
+            return {...prevState, dateOfBirth: event.target.value, isDateOfBirthValid: isDateOfBirthValid};
         })
     }
 
     emailChangeHandler = (event) => {
         this.setState(prevState => {
-            return {...prevState, email: event.target.value};
+            let isEmailValid = true;
+            if (!event.target.value.includes("@")) {
+                isEmailValid = false;
+            }
+            return {...prevState, email: event.target.value, isEmailValid: isEmailValid};
         })
     }
 
     passwordChangeHandler = (event) => {
         this.setState(prevState => {
-            return {...prevState, password: event.target.value};
+            let isPasswordValid = true;
+            if (event.target.value.trim().length < 3) {
+                isPasswordValid = false;
+            }
+            return {...prevState, password: event.target.value, isPasswordValid: isPasswordValid};
         })
     }
 
@@ -116,9 +96,19 @@ class ModalOverlay extends Component {
                         password: this.state.password,
                     };
 
-                    if (this.formDataValidCheck(formData)) {
+                    console.log("name is valid", this.state.isNameValid);
+                    console.log("date is valid", this.state.isDateOfBirthValid);
+                    console.log("email is valid", this.state.isEmailValid);
+                    console.log("password is valid", this.state.isPasswordValid);
+
+                    if (this.state.isNameValid
+                        && this.state.isDateOfBirthValid
+                        && this.state.isEmailValid && this.state.isPasswordValid) {
+
                         this.setInitialState();
                         this.props.onFormSubmit(event);
+                    } else {
+                        console.log("Something went wrong");
                     }
 
                 }}>
@@ -127,31 +117,38 @@ class ModalOverlay extends Component {
                         <input type="text"
                                id="name"
                                value={this.state.name}
-                               onChange={e => this.nameChangeHandler(e)}
-                               ref={this.state.nameInputRef}/>
+                               required
+                               onChange={e => this.nameChangeHandler(e)
+                               }
+                               />
                     </div>
                     <div className={styles.controls}>
                         <label htmlFor="date-of-birth">Date of Birth</label>
                         <input type="date"
                                id="date-of-birth"
                                value={this.state.dateOfBirth}
+                               min="1900-01-01"
+                               max="2100-12-31"
+                               required
                                onChange={e => this.dateOfBirthChangeHandler(e)}
-                               ref={this.state.dateInputRef}/>
+                        />
                     </div>
                     <div className={styles.controls}>
                         <label htmlFor="email">Email</label>
                         <input type="email"
                                id="email" value={this.state.email}
+                               required
                                onChange={e => this.emailChangeHandler(e)}
-                               ref={this.state.emailInputRef}/>
+                               />
                     </div>
                     <div className={styles.controls}>
                         <label htmlFor="password">Password</label>
                         <input type="password"
                                id="password"
                                value={this.state.password}
+                               required
                                onChange={e => this.passwordChangeHandler(e)}
-                               ref={this.state.passwordInputRef}/>
+                               />
                     </div>
                     <div className={styles.actions}>
                         <Button type="submit">{this.props.buttonMessage}</Button>
