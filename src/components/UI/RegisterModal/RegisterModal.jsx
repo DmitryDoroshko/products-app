@@ -16,10 +16,10 @@ class ModalOverlay extends Component {
         dateOfBirth: "",
         email: "",
         password: "",
-        isNameValid: false,
-        isDateOfBirthValid: false,
-        isEmailValid: false,
-        isPasswordValid: false,
+        isNameValid: true,
+        isDateOfBirthValid: true,
+        isEmailValid: true,
+        isPasswordValid: true,
     };
 
     setInitialState = () => {
@@ -28,53 +28,53 @@ class ModalOverlay extends Component {
             dateOfBirth: "",
             email: "",
             password: "",
-            isNameValid: false,
-            isDateOfBirthValid: false,
-            isEmailValid: false,
-            isPasswordValid: false,
+            isNameValid: true,
+            isDateOfBirthValid: true,
+            isEmailValid: true,
+            isPasswordValid: true,
         });
     }
 
-    nameChangeHandler = (event) => {
+    nameChangeHandler = ({target: {value}}) => {
         this.setState(prevState => {
             let isNameValid = true;
 
-            if (event.target.value.trim().length < 3) {
+            if (value.trim().length < 3) {
                 isNameValid = false;
             }
 
-            return {...prevState, name: event.target.value, isNameValid: isNameValid};
+            return {...prevState, name: value, isNameValid: isNameValid};
         })
     }
 
-    dateOfBirthChangeHandler = (event) => {
+    dateOfBirthChangeHandler = ({target: {value}}) => {
         this.setState(prevState => {
             let isDateOfBirthValid = true;
-            let date = new Date(event.target.value);
+            let date = new Date(value);
             if (date.getFullYear() < 1900 || date.getFullYear() > 2100) {
                 isDateOfBirthValid = false;
             }
-            return {...prevState, dateOfBirth: event.target.value, isDateOfBirthValid: isDateOfBirthValid};
+            return {...prevState, dateOfBirth: value, isDateOfBirthValid: isDateOfBirthValid};
         })
     }
 
-    emailChangeHandler = (event) => {
+    emailChangeHandler = ({target: {value}}) => {
         this.setState(prevState => {
             let isEmailValid = true;
-            if (!event.target.value.includes("@")) {
+            if (!value.includes("@")) {
                 isEmailValid = false;
             }
-            return {...prevState, email: event.target.value, isEmailValid: isEmailValid};
+            return {...prevState, email: value, isEmailValid: isEmailValid};
         })
     }
 
-    passwordChangeHandler = (event) => {
+    passwordChangeHandler = ({target: {value}}) => {
         this.setState(prevState => {
             let isPasswordValid = true;
-            if (event.target.value.trim().length < 6) {
+            if (value.trim().length < 6) {
                 isPasswordValid = false;
             }
-            return {...prevState, password: event.target.value, isPasswordValid: isPasswordValid};
+            return {...prevState, password: value, isPasswordValid: isPasswordValid};
         })
     }
 
@@ -95,13 +95,6 @@ class ModalOverlay extends Component {
                         password: this.state.password,
                     };
 
-                    console.log("name is valid", this.state.isNameValid);
-                    console.log("date is valid", this.state.isDateOfBirthValid);
-                    console.log("email is valid", this.state.isEmailValid);
-                    console.log("password is valid", this.state.isPasswordValid);
-
-                    console.log("state", this.state);
-
                     if (this.state.isNameValid
                         && this.state.isDateOfBirthValid
                         && this.state.isEmailValid && this.state.isPasswordValid) {
@@ -113,8 +106,8 @@ class ModalOverlay extends Component {
                     }
 
                 }}>
-                    <div className={`${styles.controls} ${!this.state.isNameValid ? " error" : ""}`}>
-                        <label htmlFor="name">Name</label>
+                    <div className={`${styles.controls}`}>
+                        <label htmlFor="name">Name {!this.state.isNameValid ? <span className={styles.error}>{`Invalid name: (should be more than 2 characters)`}</span> : ""}</label>
                         <input type="text"
                                id="name"
                                value={this.state.name}
@@ -123,8 +116,10 @@ class ModalOverlay extends Component {
                                }
                                />
                     </div>
-                    <div className={`${styles.controls} ${!this.state.isDateOfBirthValid ? " " : ""}`}>
-                        <label htmlFor="date-of-birth">Date of Birth</label>
+                    <div className={`${styles.controls}`}>
+                        <label htmlFor="date-of-birth">Date of Birth {this.state.isDateOfBirthValid ? "" :
+                            <span className={styles.error}>{`Invalid date: (should be between 1900-2100)`}</span>
+                        }</label>
                         <input type="date"
                                id="date-of-birth"
                                value={this.state.dateOfBirth}
@@ -134,16 +129,17 @@ class ModalOverlay extends Component {
                                onChange={e => this.dateOfBirthChangeHandler(e)}
                         />
                     </div>
-                    <div className={`${styles.controls} ${!this.state.isEmailValid ? " error" : ""}`}>
-                        <label htmlFor="email">Email</label>
+                    <div className={`${styles.controls}`}>
+                        <label htmlFor="email">Email  {!this.state.isEmailValid ? <span className={styles.error}>{`Invalid email: (should contain @)`}</span> : ""}</label>
                         <input type="email"
-                               id="email" value={this.state.email}
+                               id="email"
+                               value={this.state.email}
                                required
                                onChange={e => this.emailChangeHandler(e)}
                                />
                     </div>
-                    <div className={`${styles.controls} ${!this.state.isPasswordValid ? " error" : ""}`}>
-                        <label htmlFor="password">Password</label>
+                    <div className={`${styles.controls}`}>
+                        <label htmlFor="password">Password  {!this.state.isPasswordValid ? <span className={styles.error}>{`Invalid password: (should be more than 5 characters)`}</span>: ""}</label>
                         <input type="password"
                                id="password"
                                value={this.state.password}

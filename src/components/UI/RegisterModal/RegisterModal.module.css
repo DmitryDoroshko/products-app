@@ -58,7 +58,7 @@
     padding: 1rem 2rem;
 }
 
-.error input{
+.error {
     color: white;
     background-color: red;
 }

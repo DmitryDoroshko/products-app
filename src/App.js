@@ -3,6 +3,8 @@ import Products from "./components/Products/Products/Products";
 import Register from "./components/Register/Register";
 import {v4 as uuidv4} from 'uuid';
 
+const NUMBER_OF_REQUESTS = 100;
+const REQUEST_URL = "https://api.punkapi.com/v2/beers/random";
 
 class App extends Component {
     constructor(props) {
@@ -16,8 +18,8 @@ class App extends Component {
 
     componentDidMount() {
         const fetchedProducts = [];
-        for (let i = 0; i < 100; i++) {
-            fetch("https://api.punkapi.com/v2/beers/random")
+        for (let i = 0; i < NUMBER_OF_REQUESTS; i++) {
+            fetch(REQUEST_URL)
                 .then(res => res.json())
                 .then(product => {
                     fetchedProducts.push({
